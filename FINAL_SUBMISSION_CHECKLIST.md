@@ -83,6 +83,7 @@ If the course has a separate rubric, it should be checked against this list as w
 | Row Level Security: students can read only the active survey and never responses | Done (local), Partial (prod) | On the live site, an anonymous read of `responses` returned "permission denied", and an anonymous read of `surveys` returned only active surveys (there were none at the time) |
 | Safe, all-or-nothing submission function | Done (local) | `submit_survey_response`. Bad or mismatched submissions save nothing |
 | Migrations in the repository | Done | Two files, run in order (README §2) |
+| Tables and functions on the live project | Done (prod) | I checked in the Supabase dashboard that all 5 tables and all 7 functions exist. Claude Code confirmed the same with anonymous calls, which also showed the permissions work as designed (TESTING.md) |
 
 ## 6. Technology and folder structure (specification §7 and §8)
 

@@ -60,6 +60,7 @@ The results were the same both times, except for the rows marked below.
 | Chrome, wrong login details | Shows "Invalid email or password.", which came from real Supabase Auth |
 | Supabase Auth settings (`/auth/v1/settings`) | First run: `disable_signup: false` (public sign-up was on). **Second run: `disable_signup: true`**, so public sign-up is now off |
 | CSV change on the live site (second run) | The live site serves the same files as the local build of `3af973b` (`index-BCtea890.js`, `Results-Ck41Q37i.js`). The live results code contains `survey_title` and `survey_created_at`. An actual CSV download on the live site has not been tested |
+| All 5 tables and 7 functions exist on live Supabase (third run, after my own check in the dashboard) | Each was called anonymously in a way that can't change data. `surveys`, `questions` and `choices` return `200`; `responses` and `answers` return `permission denied`, which shows they exist (a missing table returns "not found"). `activate_survey`, `close_survey`, `save_survey`, `duplicate_survey` and `survey_choice_counts` return `permission denied for function` to anonymous users, as intended. `get_survey_status` returns `200 null` for an unknown code. `submit_survey_response` rejects a made-up survey with `SURVEY_NOT_ACTIVE` and saves nothing |
 
 **Not yet checked on the live site:**
 - instructor login;

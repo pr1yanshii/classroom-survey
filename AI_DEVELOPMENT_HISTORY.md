@@ -380,7 +380,7 @@ after "rem".
 - **Code untouched:** no application code, migrations, configuration or specification text was
   changed, and nothing was committed or pushed.
 
-## Stage 9: Final commit and deployment (from 21:32)
+## Stage 9: Final commit and deployment (21:32–21:44)
 
 > We have finished reviewing the documentation for my CSE 4095 Classroom Survey Web App.
 >
@@ -429,6 +429,44 @@ after "rem".
   DEVELOPMENT_SUMMARY.md were updated to match, and this stage was added here. These changes went in a
   second commit.
 - **Still not tested:** the logged-in workflow on the live site has not been tested.
+
+## Stage 10: Finalizing (from 21:44)
+
+> I have confirmed that public sign-up is disabled in Supabase. I also verified that all 5 database tables and all 7 required functions exist.
+>
+> Please now finalize my CSE 4095 Classroom Survey project.
+>
+> 1. Review the latest documentation changes, especially DECISIONS.md.
+> 2. Confirm that all documentation uses simple, natural language.
+> 3. Check that the original professor-provided specifications are unchanged.
+> 4. Check that no passwords, secret keys, or private environment files will be committed.
+> 5. Run typechecking, linting, automated tests, and the production build.
+> 6. Commit and push the final changes to GitHub main.
+> 7. Verify that Cloudflare Pages deploys the latest commit.
+> 8. Check that the updated CSV export is included in production.
+> 9. Report the final commit hash, deployment status, and test results.
+>
+> GitHub: https://github.com/pr1yanshii/classroom-survey
+> Production: https://classroom-survey-63r.pages.dev/
+>
+> Do not change working features unnecessarily. Do not claim unverified tests passed.
+
+**Summary of what happened:**
+
+- **No pending changes:** there were no local changes since `89a8388`.
+- **Live database checked:** Claude Code confirmed my dashboard check with anonymous calls that can't
+  change data:
+  - all 5 tables exist;
+  - all 7 functions exist;
+  - the instructor functions refuse anonymous users;
+  - `submit_survey_response` rejects a made-up survey without saving anything.
+- **Checks re-run:**
+  - The specification files are still unchanged, and only `.env.example` is tracked.
+  - Typecheck, lint, Prettier and the build passed.
+  - 52/52 unit and database tests and 50/50 browser tests passed.
+  - `test:live` and `test:prod` were skipped (no login details available locally).
+- **Docs:** TESTING.md and FINAL_SUBMISSION_CHECKLIST.md now record the database check. This stage was
+  added here, then committed and pushed.
 
 ## What the AI did and did not do
 
