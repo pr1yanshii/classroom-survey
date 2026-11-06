@@ -4,8 +4,8 @@ This file lists the screenshots for my submission and whether each one has been 
 myself on November 5, 2026, and they are in [`docs/screenshots/`](screenshots/). Unless a row says
 otherwise, they show the **live site** (<https://classroom-survey-63r.pages.dev>) in desktop Chrome.
 
-**Summary:** 17 of the 18 planned screenshots are done, and 2 extra ones were added. I decided to
-submit the screenshots as they are.
+**Summary:** 17 of the 18 planned screenshots are done. There are also 4 database screenshots and 2
+extra ones. I decided to submit the screenshots as they are.
 - **Optional, not taken:** #5 (editor validation).
 - **Taken differently than planned:** #7 was taken in a desktop browser instead of on a phone. I did
   scan the QR code with my iPhone (see TESTING.md), but didn't take a screenshot of it.
@@ -40,6 +40,18 @@ submit the screenshots as they are.
 | 19 | "Close Survey" confirmation dialog on the dashboard | [19-close-dialog.png](screenshots/19-close-dialog.png) |
 | 20 | Dashboard after closing, showing the Closed status and its buttons | [20-dashboard-closed.png](screenshots/20-dashboard-closed.png) |
 
+## Database records (Supabase)
+
+These show the data saved in Supabase by my live test: the survey, its questions, the student's
+response and the answers. Each one is a Supabase Table Editor view of the live project.
+
+| # | Table | What it shows | File |
+|---|-------|---------------|------|
+| 21 | `surveys` | The "Introduction to Computer Science" survey, with status `closed` and code `2yvvy3` | [21-supabase-surveys.png](screenshots/21-supabase-surveys.png) |
+| 22 | `questions` | The survey's two questions: "What does CPU stand for?" (`multiple_choice`) and "HTML is a programming language." (`true_false`) | [22-supabase-questions.png](screenshots/22-supabase-questions.png) |
+| 23 | `responses` | The one student response, with its anonymous token and submission time, linked to the survey | [23-supabase-responses.png](screenshots/23-supabase-responses.png) |
+| 24 | `answers` | The two answers in that response, one per question, each linked to the chosen choice | [24-supabase-answers.png](screenshots/24-supabase-answers.png) |
+
 ## Privacy check
 
 No passwords, secret keys or environment variable values are visible in any screenshot. These
@@ -50,6 +62,8 @@ screenshots do show personal details, and the repository is public:
 - **`12-csv-spreadsheet.png`** shows my Microsoft account profile photo in the top-right corner.
 
 I reviewed these and chose to keep the screenshots as they are.
+- Screenshots 21–24 show the Supabase project ID in the address bar and my other browser tab titles.
+  The project ID is already public, because it is part of the Supabase URL in the live site's code.
 - Several screenshots show the demo instructor email (`classroomsurveydemo@gmail.com`). That is the
   demo login, and its password isn't shown.
 

@@ -630,6 +630,35 @@ Its verdict was "READY WITH LIMITATIONS".
 - **Pushed:** after a final check, the documentation and screenshots were committed and pushed. No
   application code was changed and no tests were run.
 
+## Stage 16: Database screenshots
+
+**My prompt (verbatim):**
+
+> Writing
+>
+>
+>
+>
+>
+> I've added four new Supabase screenshots in docs/screenshots/ showing the survey, its questions, the stored student response, and the answers.
+>
+> Please add them to docs/EVIDENCE.md with short, simple descriptions and working image links. These screenshots are required database evidence for my assignment.
+>
+> Don't change any application code or run tests. Just update the evidence documentation, then commit and push the changes to GitHub. Confirm the push succeeded.
+
+**Summary of what happened:**
+
+- **Renamed:** the four new Supabase screenshots still had macOS default names, which contain spaces
+  and a special space character that breaks Markdown links. Claude Code renamed them
+  `21-supabase-surveys.png` to `24-supabase-answers.png`.
+- **Checked:** it looked at each one. They show the `surveys`, `questions`, `responses` and `answers`
+  tables with the data from my live test.
+- **EVIDENCE.md:** a new "Database records (Supabase)" section has a short description and a working
+  link for each one. A privacy note was added: the address bar shows the Supabase project ID, which is
+  already public in the site's code, and my other browser tab titles are visible.
+- **Pushed:** the changes were committed and pushed. No application code was changed and no tests were
+  run.
+
 ## What the AI did and did not do
 
 - **Claude Code** wrote the application code, migrations, tests and most of the documentation. It ran
