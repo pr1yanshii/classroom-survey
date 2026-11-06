@@ -1,0 +1,49 @@
+{
+  "name": "classroom-survey",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "typecheck": "tsc -b",
+    "test": "vitest run tests/unit tests/db",
+    "test:e2e": "playwright test",
+    "test:live": "vitest run tests/live",
+    "test:all": "npm run test && npm run test:e2e"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@electric-sql/pglite": "^0.5.15",
+    "@playwright/test": "^1.65.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "@types/node": "^24.19.2",
+    "@types/pngjs": "^6.0.5",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsqr": "^1.4.0",
+    "oxlint": "^1.90.0",
+    "pngjs": "^7.0.0",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4.3.4",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}
