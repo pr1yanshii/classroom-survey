@@ -13,7 +13,8 @@
     "test": "vitest run tests/unit tests/db",
     "test:e2e": "playwright test",
     "test:live": "vitest run tests/live",
-    "test:all": "npm run test && npm run test:e2e"
+    "test:all": "npm run test && npm run test:e2e",
+    "test:prod": "playwright test --config playwright.prod.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

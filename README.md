@@ -130,6 +130,7 @@ If the variables are missing, the app shows a "Supabase is not configured" messa
 | `npm test` | Unit tests + database tests on PGlite (real Postgres running the migrations) |
 | `npm run test:e2e` | Browser tests in Chrome and Firefox against a local Supabase stand-in. One-time: `npx playwright install firefox` (Chrome must be installed) |
 | `npm run test:live` | Tests against your real Supabase project (see below) |
+| `npm run test:prod` | Full browser workflow against the **deployed** site (see §6) |
 | `npm run build` | Typecheck and production build to `dist/` |
 
 Live test (creates one "[live test]" survey and deletes it; re-activates whatever survey was active):
@@ -167,6 +168,12 @@ SPA routing: `public/_redirects` sends every path to `index.html`, so deep links
 from, so present from the production URL.
 
 ### Verify production
+
+Automated: create a git-ignored `.env.test.local` with `PROD_URL=https://<project>.pages.dev`,
+`LIVE_EMAIL=...`, `LIVE_PASSWORD=...`, then run `npm run test:prod`. It logs in, creates a
+"[prod check]" survey, activates it, decodes the QR code, submits as two phone users, checks
+duplicate blocking, the live count, results, CSV, and closing, then deletes the survey. Manual
+checklist:
 
 - [ ] `https://<project>.pages.dev/s/zzzzzz` shows "Survey not found." (SPA routing + Supabase reachable)
 - [ ] Instructor login works; wrong password is rejected
