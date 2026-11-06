@@ -51,8 +51,9 @@ We used Supabase Authentication so the instructor can log in securely with an em
   single instructor.
 - The instructor account is created by hand in the Supabase dashboard. The app has no sign-up page.
 - Because any signed-in user gets full access, **public sign-up must be turned off in Supabase**
-  (Authentication → Sign In / Providers → Email). On November 5, 2026 it was still on in the live
-  project. See TESTING.md.
+  (Authentication → Sign In / Providers → Email). It was still on in the first check on November 5,
+  2026. It has since been turned off, and the second check confirmed `disable_signup: true`. See
+  TESTING.md.
 
 ## 5. Student access
 

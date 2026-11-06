@@ -42,19 +42,24 @@ Node 24.22. Every result below comes from an actual run.
 
 ### Production checks that did run (anonymous, no credentials)
 
-Claude Code ran these on November 5, 2026 against <https://classroom-survey-63r.pages.dev>. That
-deployment was built from commit `e9707d4`, which has a passing "Cloudflare Pages" check on GitHub.
+Claude Code ran these on November 5, 2026 against <https://classroom-survey-63r.pages.dev>, twice:
+
+- **First run:** against the deployment of commit `e9707d4`.
+- **Second run:** after commit `3af973b` was pushed and its "Cloudflare Pages" check on GitHub passed.
+
+The results were the same both times, except for the rows marked below.
 
 | Check | Result |
 |-------|--------|
 | `GET /` and the deep link `GET /s/zzzzzz` | Both returned HTTP 200, so the `_redirects` routing works |
 | Deployed code settings | The deployed code has the same Supabase project URL and publishable key as `.env.local` (compared without printing them). There is no secret or `service_role` key. The only `sb_secret_` text found is supabase-js library code that checks key prefixes |
 | Migrations applied on live Supabase | Yes. An anonymous `GET /rest/v1/surveys` returned `200 []` (no active survey). An anonymous `GET /rest/v1/responses` returned `401 permission denied for table responses`, so the permissions and RLS are in place. An anonymous `rpc/get_survey_status` call returned `200 null` for an unknown code |
-| Chrome, `/s/zzzzzz` | Shows "Survey not found." in about 1.6 s, including the Supabase lookup |
+| Chrome, `/s/zzzzzz` | Shows "Survey not found." It took about 1.6 s on the first run and 1.1 s on the second, including the Supabase lookup |
 | Chrome, `/` | The landing page renders, with no "Supabase is not configured" message |
 | Chrome, `/dashboard` while signed out | Redirects to `/login` |
 | Chrome, wrong login details | Shows "Invalid email or password.", which came from real Supabase Auth |
-| Supabase Auth settings (`/auth/v1/settings`) | **`disable_signup: false`**: public sign-up is still on (email confirmation is required). See Limitations |
+| Supabase Auth settings (`/auth/v1/settings`) | First run: `disable_signup: false` (public sign-up was on). **Second run: `disable_signup: true`**, so public sign-up is now off |
+| CSV change on the live site (second run) | The live site serves the same files as the local build of `3af973b` (`index-BCtea890.js`, `Results-Ck41Q37i.js`). The live results code contains `survey_title` and `survey_created_at`. An actual CSV download on the live site has not been tested |
 
 **Not yet checked on the live site:**
 - instructor login;
@@ -125,10 +130,6 @@ These need the instructor login (`npm run test:prod`) or the manual checklist in
 
 ## Limitations (not verified)
 
-- **Public sign-up is on in the live Supabase project** (`disable_signup: false` on November 5, 2026).
-  Any signed-in user has full instructor access (one-instructor design, DECISIONS.md #4). So someone who
-  signs up through the Supabase API and confirms their email could read or delete data. To fix it, go to
-  Supabase → Authentication → Sign In / Providers → Email and turn off "Allow new users to sign up".
 - **Logged-in features not tested on the live project.** The migrations are applied (see the checks
   above). But `npm run test:live` and `npm run test:prod` have not run, because the instructor login
   was not available locally. The local stand-in only copies the Supabase calls this app makes.
@@ -144,5 +145,6 @@ These need the instructor login (`npm run test:prod`) or the manual checklist in
   This is an accepted limit of anonymous surveys.
 - **The present page only refreshes the response count.** If the survey is closed from another tab,
   the present page keeps showing the QR code until it is reloaded.
-- **The CSV metadata change is not deployed yet.** It is tested locally. The live site keeps serving
-  commit `e9707d4` until the next push makes Cloudflare rebuild it.
+- **Public sign-up must stay off.** Any signed-in user has full instructor access (one-instructor
+  design, DECISIONS.md #4). Sign-up was on at the first check and off at the second. If it is turned
+  back on, anyone who signs up and confirms their email could read or delete data.

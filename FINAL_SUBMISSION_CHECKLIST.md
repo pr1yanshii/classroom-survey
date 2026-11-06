@@ -27,7 +27,7 @@ If the course has a separate rubric, it should be checked against this list as w
 
 | Requirement | Status | Evidence / notes |
 |-------------|--------|------------------|
-| Instructor authentication | Done (local), Partial (prod) | Supabase email and password login, and protected pages. On the live site, the login redirect and wrong-password rejection were checked, but a real instructor login was not. **Public sign-up is still on (see §8)** |
+| Instructor authentication | Done (local), Partial (prod) | Supabase email and password login, and protected pages. On the live site, the login redirect and wrong-password rejection were checked, but a real instructor login was not. Public sign-up is turned off (`disable_signup: true` on the second check) |
 | Survey creation and editing | Done (local), Unverified (prod) | `src/pages/SurveyEditor.tsx` and the `save_survey` function. Covered by browser and database tests |
 | Multiple-choice questions | Done (local), Unverified (prod) | The browser tests create and answer them |
 | True/False questions | Done (local), Unverified (prod) | Fixed True/False choices; browser tests |
@@ -36,7 +36,7 @@ If the course has a separate rubric, it should be checked against this list as w
 | PostgreSQL storage | Done (local), Partial (prod) | The migrations have been run on the live project (checked without logging in). Data surviving a reload was tested locally |
 | Results dashboard | Done (local), Unverified (prod) | Counts, percentages, bar charts and Refresh. The example numbers from UI.md are unit-tested |
 | Historical browsing | Done (local), Unverified (prod) | Dashboard search plus status and date filters. Closed and archived surveys keep their results |
-| CSV export | Done (local), Unverified (prod) | One row per response with a question-text header, plus `survey_title` and `survey_created_at`. These two columns were added in the final stage and are **not deployed yet** |
+| CSV export | Done (local), Unverified (prod) | One row per response with a question-text header, plus `survey_title` and `survey_created_at`. These two columns are in the live build of commit `3af973b`, but a CSV download on the live site has not been tested |
 
 ## 2. Users (specification §3)
 
@@ -70,7 +70,7 @@ If the course has a separate rubric, it should be checked against this list as w
 | Mobile-friendly layout | Done (local), Manual | Tested at 375 px wide: no sideways scrolling, touch targets at least 44 px, accessibility scan passed. Not checked on real devices |
 | At least 200 students at once | **Not done** | No load test. The design should handle it (static hosting, one database call per submission, a unique index for duplicates), but it has **not been measured** |
 | Average page load under 2 seconds | Partial | The student page's JavaScript is 141.7 kB gzipped, and the chart library only loads on the results page. On the live site, one cold load of `/s/zzzzzz` took about 1.6 s in Chrome on one network. This was not measured systematically |
-| Secure instructor login | **Partial** | Supabase login, Row Level Security on every table, explicit permissions and no sign-up page. **But public sign-up is on in the live project**, and any signed-in user has full access. It must be turned off (§8) |
+| Secure instructor login | Done | Supabase login, Row Level Security on every table, explicit permissions and no sign-up page. Public sign-up was on at the first check and is now off (`disable_signup: true`). It must stay off, because any signed-in user has full access |
 | Free hosting | Done | Cloudflare Pages and Supabase. Claude Code did not check which Supabase plan I'm on |
 
 ## 5. Database (specification §6 and DATABASE.md)
@@ -100,14 +100,14 @@ If the course has a separate rubric, it should be checked against this list as w
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Source code on GitHub | Done | **The final-stage changes (CSV columns and these documents) are not committed or pushed yet** |
+| Source code on GitHub | Done | Final changes pushed to `main` (commit `3af973b`, plus a later commit that only updates these status notes) |
 | The five original specification files | Done | API.md, DATABASE.md, UI.md and the main specification are unchanged. Their file dates are 18:56, before work started, and git shows no changes. In TODO.md only the checkboxes and status notes changed |
 | Updated TODO.md | Done | Phases 11 and 15 were updated in the final stage |
 | Database migrations | Done | `supabase/migrations/` |
 | README with setup, environment variables, testing and deployment | Done | Includes the live URL and the deployment status |
 | DECISIONS.md and TESTING.md | Done | 18 decisions; test results come from real runs |
 | No exposed secrets; `.env` files ignored | Done | Every tracked file was checked. Only `.env.example`, which has placeholders, is tracked. The deployed code contains only the public key |
-| Public live URL | Done | <https://classroom-survey-63r.pages.dev> |
+| Public live URL | Done | <https://classroom-survey-63r.pages.dev>. Cloudflare's check passed for `3af973b`, and the live site serves that build |
 | Full workflow checked on the live site | **Not done** | Only the checks that don't need a login have been run. `npm run test:prod` needs my login details |
 | DEVELOPMENT_SUMMARY.md | Done | |
 | AI_DEVELOPMENT_HISTORY.md | Done | My exact prompts, plus clearly marked summaries |
@@ -115,11 +115,8 @@ If the course has a separate rubric, it should be checked against this list as w
 
 ## 8. What I still need to do (most important first)
 
-1. **Turn off public sign-up.** In Supabase, go to Authentication → Sign In / Providers → Email and
-   turn off "Allow new users to sign up". Until then, a stranger could sign up through the Supabase API,
-   confirm their email and get full instructor access.
-2. **Commit and push the final changes.** This puts the new documents on GitHub and makes Cloudflare
-   deploy the CSV columns.
+1. ~~Turn off public sign-up.~~ Done: the second check showed `disable_signup: true`.
+2. ~~Commit and push the final changes.~~ Done: commit `3af973b`, deployed by Cloudflare.
 3. **Check the logged-in workflow on the live site.** I can create `.env.test.local` with `PROD_URL`,
    `LIVE_EMAIL` and `LIVE_PASSWORD`, then run `npm run test:live` and `npm run test:prod`. Or I can go
    through the manual checklist in README §6. After that, tick the last three Phase 15 items in TODO.md.

@@ -84,8 +84,8 @@ The code is public on GitHub, and Cloudflare Pages deploys it automatically.
 - **Checked on the live site:** direct links work, the site uses the right Supabase project with only
   the public key, signed-out visitors are sent to login, and a wrong password is rejected.
 - **Not yet checked on the live site:** creating a survey, scanning, submitting, results and CSV.
-- **Open problem:** public sign-up was still on in Supabase during the final check. I need to turn it
-  off, because anyone who signs in gets instructor access.
+- **Sign-up:** public sign-up was on at first, which matters because anyone who signs in gets
+  instructor access. I turned it off, and a later check confirmed it.
 
 ## What I learned
 

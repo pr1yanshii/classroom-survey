@@ -47,9 +47,8 @@ Unless the row says otherwise, take each one on the **live site**
 | 17 | GitHub repository | The home page of <https://github.com/pr1yanshii/classroom-survey> | `17-github-repo.png` | Not taken |
 | 18 | Automated test results | Terminal output of `npm test` and `npm run test:e2e`, plus `npm run test:prod` if it has been run | `18-tests.png` | Not taken |
 
-**Note on row 12:** the new CSV columns are in my local copy but not on the live site yet. The live site
-will only have them after I push and Cloudflare rebuilds the site. Until then it exports the older CSV
-without them.
+**Note on row 12:** the new CSV columns are on the live site (commit `3af973b`), so the CSV can be
+exported from there.
 
 ## Before taking the screenshots
 
@@ -60,5 +59,5 @@ without them.
   collect names anyway.
 - **Use the live URL.** The QR page must show the `pages.dev` address, because that proves the QR code
   points to the live site.
-- **Fix the sign-up setting first.** Row 15 should show sign-up turned **off**. On November 5, 2026 it
-  was still on (see [TESTING.md](TESTING.md)).
+- **Sign-up setting:** row 15 should show sign-up turned **off**. It was confirmed off on the second
+  check on November 5, 2026 (see [TESTING.md](TESTING.md)).

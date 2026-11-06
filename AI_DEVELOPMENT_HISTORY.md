@@ -306,7 +306,7 @@ label, and some extra buttons.
 - **Code untouched:** no application code, migrations, configuration or specification text was
   changed, and nothing was committed or pushed.
 
-## Stage 8: Rewriting DECISIONS.md (from 21:28)
+## Stage 8: Rewriting DECISIONS.md (21:28–21:32)
 
 **My first message (verbatim):** I pasted this draft with no other text.
 
@@ -379,6 +379,56 @@ after "rem".
   - the checklist's "31 decisions" became "18 decisions".
 - **Code untouched:** no application code, migrations, configuration or specification text was
   changed, and nothing was committed or pushed.
+
+## Stage 9: Final commit and deployment (from 21:32)
+
+> We have finished reviewing the documentation for my CSE 4095 Classroom Survey Web App.
+>
+> Please complete the final deployment process.
+>
+> 1. Review all modified files, including DECISIONS.md and the four submission documents.
+> 2. Confirm that the documentation uses simple, natural language and accurately describes the project.
+> 3. Verify that the original professor-provided specification files remain unchanged.
+> 4. Make sure no passwords, private environment files, or secret keys are included in the commit.
+> 5. Run typechecking, linting, automated tests, and the production build again.
+> 6. Commit and push all final changes to the main branch of my existing GitHub repository.
+> 7. Check that Cloudflare Pages successfully deploys the latest commit.
+> 8. Confirm that the updated CSV export is included in the production build.
+> 9. Do not claim the live workflow passed unless it was actually tested.
+>
+> After completing these steps, give me the commit hash, deployment status, test results, and any remaining tasks before submission.
+>
+> GitHub: https://github.com/pr1yanshii/classroom-survey
+> Production: https://classroom-survey-63r.pages.dev/
+
+**Summary of what happened:**
+
+- **Review before committing:**
+  - The four original specification files were confirmed unchanged since the first commit.
+  - `.env.local` was confirmed git-ignored.
+  - The files to be committed were scanned for the real Supabase URL and key and for secret-key and
+    password patterns. The only match was the made-up password of the local test stand-in
+    (`correct-horse-battery`), which was already in the repository.
+- **Checks re-run:**
+  - Typecheck, lint, Prettier and the build passed.
+  - 52/52 unit and database tests and 50/50 browser tests passed.
+  - `test:live` (10 skipped) and `test:prod` (1 skipped) were skipped, because no login details were
+    available locally.
+- **Commit:** `3af973b` ("Add CSV survey metadata and final submission documents") was pushed to
+  `main`. Only the 13 reviewed files were staged.
+- **Deployment confirmed:**
+  - The "Cloudflare Pages" check on GitHub finished with **success** for `3af973b`.
+  - The live site serves the same file names as the local build (`index-BCtea890.js`,
+    `Results-Ck41Q37i.js`).
+  - The live results code contains `survey_title` and `survey_created_at`.
+- **Checks without logging in, run again:** deep link, landing page, login redirect and wrong-password
+  rejection all passed.
+- **Sign-up setting:** this check showed Supabase now has `disable_signup: true`, so public sign-up
+  had been turned off since Stage 6.
+- **Status notes updated:** TESTING.md, FINAL_SUBMISSION_CHECKLIST.md, EVIDENCE.md, DECISIONS.md and
+  DEVELOPMENT_SUMMARY.md were updated to match, and this stage was added here. These changes went in a
+  second commit.
+- **Still not tested:** the logged-in workflow on the live site has not been tested.
 
 ## What the AI did and did not do
 
