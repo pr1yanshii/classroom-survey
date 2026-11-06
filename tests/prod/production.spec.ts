@@ -122,7 +122,9 @@ test('production: full instructor and student workflow', async ({ browser }) => 
     const download = p.waitForEvent('download')
     await p.getByRole('button', { name: 'Export CSV' }).click()
     const csv = await readFile((await (await download).path())!, 'utf8')
-    expect(csv.slice(1).split('\r\n')).toHaveLength(3)
+    const csvLines = csv.slice(1).split('\r\n')
+    expect(csvLines).toHaveLength(3)
+    expect(csvLines[0]).toMatch(/,survey_title,survey_created_at$/)
 
     // Close -> student blocked
     await p.goto('/dashboard')

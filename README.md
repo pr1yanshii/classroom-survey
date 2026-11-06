@@ -1,43 +1,60 @@
 # Classroom Survey
 
-A web app for quick in-class understanding checks. The instructor prepares a survey, activates it,
-and projects a QR code. Students scan it and answer on their phones without logging in. Responses
-are stored permanently and shown as counts, percentages, and bar charts, with CSV export.
+A web app for quick understanding checks during class. The instructor prepares a survey, activates it
+and projects a QR code. Students scan the code and answer on their phones without logging in.
+Responses are saved permanently and shown as counts, percentages and bar charts. They can also be
+exported as CSV.
 
-CSE 4095 project.
+This is my CSE 4095 project.
 
-- **Live app:** _added after deployment is verified_
-- **Specification (unchanged, source of truth):**
+- **Live app:** <https://classroom-survey-63r.pages.dev> (Cloudflare Pages, deployed from `main`)
+- **Source code:** <https://github.com/pr1yanshii/classroom-survey>
+- **Specification:** the professor's files are the source of truth and are unchanged:
   [Classroom_Survey_Web_App_Specification.md](Classroom_Survey_Web_App_Specification.md),
-  [DATABASE.md](DATABASE.md), [API.md](API.md), [UI.md](UI.md), [TODO.md](TODO.md) (progress updated).
-  Index: [SPEC.md](SPEC.md)
+  [DATABASE.md](DATABASE.md), [API.md](API.md), [UI.md](UI.md) and [TODO.md](TODO.md). In TODO.md,
+  only the progress checkboxes and notes are updated. [SPEC.md](SPEC.md) links to all five.
 - **Design decisions:** [DECISIONS.md](DECISIONS.md)
 - **Test results and known limitations:** [TESTING.md](TESTING.md)
+- **Submission documents:**
+  - [DEVELOPMENT_SUMMARY.md](DEVELOPMENT_SUMMARY.md)
+  - [AI_DEVELOPMENT_HISTORY.md](AI_DEVELOPMENT_HISTORY.md)
+  - [EVIDENCE.md](EVIDENCE.md) (screenshots)
+  - [FINAL_SUBMISSION_CHECKLIST.md](FINAL_SUBMISSION_CHECKLIST.md)
+
+**Deployment status (November 5, 2026):** the site is live, and the parts that don't need a login
+have been checked: direct links, the Supabase connection, login protection and wrong-password
+rejection. The logged-in instructor workflow has **not** been checked on the live site yet. See
+[TESTING.md](TESTING.md#production-checks-that-did-run-anonymous-no-credentials).
 
 ## Features
 
-**Instructor** (Supabase Auth email/password)
+**Instructor** (logs in with email and password through Supabase Auth)
 
-- Create, edit, duplicate, archive, and delete surveys
-- Multiple Choice and True/False questions; reorder questions and choices
-- Activate / close surveys; only one survey can be active (enforced by the database)
-- Present page: large QR code, readable URL, PNG download, live response count, full-screen mode
-- Results: total responses, per-choice counts and percentages, bar charts, refresh
-- Historical browsing: search by title, filter by status and creation date
-- CSV export (one row per response)
+- Create, edit, duplicate, archive and delete surveys.
+- Multiple Choice and True/False questions. Questions and choices can be reordered.
+- Activate and close surveys. Only one survey can be active, and the database enforces this.
+- Present page with a large QR code, a readable URL, PNG download, a live response count and full-screen
+  mode.
+- Results page with the total number of responses, counts and percentages for each choice, bar charts
+  and a Refresh button.
+- Past surveys: search by title and filter by status or creation date.
+- CSV export with one row per response. The columns are `response_id`, `submitted_at`, one column per
+  question, then `survey_title` and `survey_created_at`.
 
-**Student** (no account)
+**Student** (no account needed)
 
-- Opens `/s/<code>` from the QR code; mobile-first, one column, 44 px+ touch targets
-- Validation, confirmation, and friendly messages for closed / unknown surveys
-- Duplicate protection: browser token + database uniqueness constraint
+- Opens `/s/<code>` from the QR code. The page is built for phones first: a single column with touch
+  targets of at least 44 px.
+- Gets clear validation, a confirmation screen, and friendly messages when a survey is closed or the
+  link is wrong.
+- Can't submit twice: a random token saved in the browser, plus a uniqueness rule in the database.
 
 **Security**
 
-- Row Level Security on all five tables; students can read only the active survey and cannot read
-  any responses
-- Submissions go through one validated, transactional database function
-- Only the public (anon / publishable) Supabase key is used in the browser
+- Row Level Security is on for all five tables. Students can read only the active survey, and can never
+  read any responses.
+- Every submission goes through one database function that checks it and saves everything at once.
+- The browser only ever uses the public Supabase key (anon or publishable).
 
 ## Tech stack
 
@@ -54,23 +71,23 @@ src/
 supabase/
   migrations/   Tables, constraints, indexes, RLS policies, RPC functions (run in order)
 tests/
-  unit/  db/  e2e/  live/   See TESTING.md
+  unit/  db/  e2e/  live/  prod/   See TESTING.md
 public/         favicon, Cloudflare `_redirects` (SPA routing)
 ```
 
-| Path | Page | Access |
-|------|------|--------|
-| `/` | Landing | Public |
-| `/login` | Instructor login | Public |
-| `/s/:slug` | Student survey | Public |
+| Path | Page | Who can open it |
+|------|------|-----------------|
+| `/` | Landing | Anyone |
+| `/login` | Instructor login | Anyone |
+| `/s/:slug` | Student survey | Anyone |
 | `/dashboard` | Survey list | Instructor |
 | `/surveys/new`, `/surveys/:id/edit` | Survey editor | Instructor |
-| `/surveys/:id/present` | QR code for projection | Instructor |
+| `/surveys/:id/present` | QR code for projecting | Instructor |
 | `/surveys/:id/results` | Charts and CSV export | Instructor |
 
 ## 1. Install
 
-Requirements: Node.js 22.12+ (24 recommended; see `.node-version`) and npm.
+You need Node.js 22.12 or newer (24 is recommended; see `.node-version`) and npm.
 
 ```sh
 git clone https://github.com/<your-account>/classroom-survey.git
@@ -78,40 +95,41 @@ cd classroom-survey
 npm install
 ```
 
-## 2. Supabase setup (free tier)
+## 2. Set up Supabase (free tier)
 
 1. Create a project at <https://supabase.com/dashboard> → **New project**.
-2. **SQL Editor → New query**: paste and **Run** each migration, in this order:
+2. Open **SQL Editor → New query**. Paste in each migration and click **Run**, in this order:
    1. `supabase/migrations/20261105000000_initial_schema.sql`
    2. `supabase/migrations/20261105000100_survey_functions.sql`
 
-   Each should report "Success. No rows returned". (With the Supabase CLI you can instead run
-   `supabase link` then `supabase db push`.)
-3. **Authentication → Users → Add user → Create new user**: enter the instructor's email and
-   password and tick **Auto Confirm User**.
-4. **Authentication → Sign In / Providers → Email**: turn **off** "Allow new users to sign up", so
-   only the account from step 3 can log in.
-5. **Project Settings → API Keys**: copy the **Publishable key** (or the legacy **anon public**
-   key). **Project Settings → Data API** (or **API**): copy the **Project URL**.
+   Each one should say "Success. No rows returned". If you use the Supabase CLI, you can run
+   `supabase link` and then `supabase db push` instead.
+3. Go to **Authentication → Users → Add user → Create new user**. Enter the instructor's email and
+   password, and tick **Auto Confirm User**.
+4. Go to **Authentication → Sign In / Providers → Email** and turn **off** "Allow new users to sign
+   up". That way only the account from step 3 can log in.
+5. Go to **Project Settings → API Keys** and copy the **Publishable key** (or the older **anon public**
+   key). Then go to **Project Settings → Data API** (or **API**) and copy the **Project URL**.
 
-> Never use the `service_role` / secret key in this app. It bypasses Row Level Security and would be
-> visible to anyone who opens the site.
+> Never use the `service_role` or secret key in this app. It skips Row Level Security, and anyone who
+> opens the site would be able to see it.
 
 ## 3. Environment variables
 
 | Variable | Value | Secret? |
 |----------|-------|---------|
-| `VITE_SUPABASE_URL` | Project URL, e.g. `https://abcd1234.supabase.co` | No |
-| `VITE_SUPABASE_ANON_KEY` | Publishable / anon key | No: public by design; RLS protects the data |
+| `VITE_SUPABASE_URL` | Project URL, for example `https://abcd1234.supabase.co` | No |
+| `VITE_SUPABASE_ANON_KEY` | Publishable or anon key | No. It is meant to be public; Row Level Security protects the data |
 
-Local development:
+For local development:
 
 ```sh
 cp .env.example .env.local   # then fill in both values
 ```
 
-`.env.local` and every other `.env*` file except `.env.example` are git-ignored. Vite embeds these
-values in the JavaScript bundle at build time, so they must be set wherever the app is **built**.
+Git ignores `.env.local` and every other `.env*` file except `.env.example`. Vite puts these values
+into the JavaScript when the app is built. So they must be set wherever the app is **built**, not just
+where it runs.
 
 ## 4. Run locally
 
@@ -123,32 +141,33 @@ If the variables are missing, the app shows a "Supabase is not configured" messa
 
 ## 5. Testing
 
-| Command | What it runs |
+| Command | What it does |
 |---------|--------------|
-| `npm run typecheck` | TypeScript (app, config, tests) |
-| `npm run lint` | oxlint |
-| `npm test` | Unit tests + database tests on PGlite (real Postgres running the migrations) |
-| `npm run test:e2e` | Browser tests in Chrome and Firefox against a local Supabase stand-in. One-time: `npx playwright install firefox` (Chrome must be installed) |
+| `npm run typecheck` | Checks TypeScript types in the app, config and tests |
+| `npm run lint` | Runs oxlint |
+| `npm test` | Unit tests, plus database tests that run the real migrations on PGlite (PostgreSQL running inside Node) |
+| `npm run test:e2e` | Browser tests in Chrome and Firefox against a local stand-in for Supabase. First time only: `npx playwright install firefox`. Chrome must already be installed |
 | `npm run test:live` | Tests against your real Supabase project (see below) |
 | `npm run test:prod` | Full browser workflow against the **deployed** site (see §6) |
-| `npm run build` | Typecheck and production build to `dist/` |
+| `npm run build` | Type check, then a production build into `dist/` |
 
-Live test (creates one "[live test]" survey and deletes it; re-activates whatever survey was active):
+The live test creates one "[live test]" survey and deletes it afterwards. If a survey was active
+before, it is activated again at the end.
 
 ```sh
 LIVE_EMAIL=you@example.com LIVE_PASSWORD='your-password' npm run test:live
 ```
 
-Results, coverage, bugs fixed, and limitations: [TESTING.md](TESTING.md).
+Test results, coverage, fixed bugs and limitations are in [TESTING.md](TESTING.md).
 
 ## 6. Deploy to Cloudflare Pages (free)
 
-The site is static; Cloudflare builds it from GitHub on every push.
+The site is static, and Cloudflare rebuilds it from GitHub on every push.
 
 1. Push this repository to GitHub.
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**. Authorize the
-   Cloudflare GitHub app and pick the repository.
-3. Build settings:
+2. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages → Connect to Git**. Authorize
+   the Cloudflare GitHub app and pick the repository.
+3. Use these build settings:
 
    | Setting | Value |
    |---------|-------|
@@ -157,38 +176,46 @@ The site is static; Cloudflare builds it from GitHub on every push.
    | Build output directory | `dist` |
    | Root directory | _(leave empty)_ |
 
-4. **Environment variables (advanced)** → add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for
-   **Production** (and Preview if you use preview branches). Node 24 is selected automatically from
-   `.node-version`.
-5. **Save and Deploy**. The site is published at `https://<project-name>.pages.dev`.
-6. If you change the variables later, use **Deployments → Retry deployment** so the bundle is rebuilt.
+4. Under **Environment variables (advanced)**, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for
+   **Production**. Add them for Preview too if you use preview branches. Cloudflare picks Node 24
+   automatically from `.node-version`.
+5. Click **Save and Deploy**. The site is published at `https://<project-name>.pages.dev`. For this
+   project, that is <https://classroom-survey-63r.pages.dev>.
+6. If you change the variables later, use **Deployments → Retry deployment** so the site is rebuilt
+   with the new values.
 
-SPA routing: `public/_redirects` sends every path to `index.html`, so deep links such as
-`/s/abc234` and `/dashboard` load the app. QR codes use the address the instructor is presenting
-from, so present from the production URL.
+**Deep links:** `public/_redirects` sends every path to `index.html`. That way, links like `/s/abc234`
+and `/dashboard` load the app. The QR code uses whatever address the instructor is presenting from, so
+present from the live URL.
 
-### Verify production
+### Check the live site
 
-Automated: create a git-ignored `.env.test.local` with `PROD_URL=https://<project>.pages.dev`,
-`LIVE_EMAIL=...`, `LIVE_PASSWORD=...`, then run `npm run test:prod`. It logs in, creates a
-"[prod check]" survey, activates it, decodes the QR code, submits as two phone users, checks
-duplicate blocking, the live count, results, CSV, and closing, then deletes the survey. Manual
-checklist:
+**Automated check:**
+1. Create a `.env.test.local` file (git ignores it) with `PROD_URL=https://<project>.pages.dev`,
+   `LIVE_EMAIL=...` and `LIVE_PASSWORD=...`.
+2. Run `npm run test:prod`.
 
-- [ ] `https://<project>.pages.dev/s/zzzzzz` shows "Survey not found." (SPA routing + Supabase reachable)
-- [ ] Instructor login works; wrong password is rejected
-- [ ] Create a survey, **Save & Activate**; the QR code and URL show the production domain
-- [ ] Scan the QR code with a phone, submit; the present page count goes up
+The test logs in and creates a "[prod check]" survey, activates it and reads the QR code. Then it
+submits as two phone users and checks duplicate blocking, the live count, the results, the CSV and
+closing. Finally, it deletes the survey.
+
+**Manual checklist:**
+
+- [ ] `https://<project>.pages.dev/s/zzzzzz` shows "Survey not found." (deep links work and Supabase is reachable)
+- [ ] Instructor login works, and a wrong password is rejected
+- [ ] Create a survey and click **Save & Activate**; the QR code and URL show the live domain
+- [ ] Scan the QR code with a phone and submit; the count on the present page goes up
 - [ ] Submitting again from the same phone shows "already submitted"
-- [ ] Results show correct counts and percentages; CSV downloads
+- [ ] The results show the right counts and percentages, and the CSV downloads
 - [ ] Close the survey; the student link shows "no longer accepting responses"
 
 ## Troubleshooting
 
-| Symptom | Fix |
+| Problem | Fix |
 |---------|-----|
-| "Supabase is not configured" | Env vars missing at build time; set them and rebuild/redeploy |
-| "Something went wrong" everywhere, or 404s from `/rest/v1/...` | Migrations not run, or run out of order |
-| Login fails with correct password | User not confirmed: tick **Auto Confirm User** or confirm in Authentication → Users |
-| Students see "Survey not found" | The survey is not active, or the URL code is mistyped |
-| Deep links 404 on the host | Ensure `public/_redirects` is deployed (Cloudflare) or configure an SPA fallback |
+| "Supabase is not configured" | The environment variables were missing at build time. Set them and rebuild or redeploy |
+| "Something went wrong" everywhere, or 404 errors from `/rest/v1/...` | The migrations were not run, or were run in the wrong order |
+| Login fails with the correct password | The user isn't confirmed. Tick **Auto Confirm User**, or confirm the user in Authentication → Users |
+| Students see "Survey not found" | The survey isn't active, or the code in the URL is mistyped |
+| Strangers could register as instructors | Go to Authentication → Sign In / Providers → Email and turn off "Allow new users to sign up". Any signed-in user has full access |
+| Deep links show a 404 page | Make sure `public/_redirects` is deployed (on Cloudflare), or set up an SPA fallback on your host |

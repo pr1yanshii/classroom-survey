@@ -4,9 +4,14 @@
 
 This roadmap breaks the implementation into small, testable phases ordered from foundational work to advanced features.
 
-> **Status updated 2026-11-05.** `[x]` = implemented and verified by the automated tests described in
-> [TESTING.md](TESTING.md). "local" = verified against the real migrations on PGlite and the E2E
-> stand-in, **not yet against the live Supabase project** (migrations not applied there yet).
+> **Status notes (added by me, November 5, 2026, for the final submission).** The task wording below
+> is unchanged; I only updated the checkboxes and added short notes in parentheses.
+>
+> - `[x]` means the item is built and passed the automated tests described in [TESTING.md](TESTING.md).
+> - "local" means it was tested on my local setup (the real migrations on PGlite, plus a local
+>   stand-in for Supabase) but **not yet on the live Supabase project**.
+> - The live project has the migrations applied (checked without logging in). The logged-in instructor
+>   features have not been tested there yet.
 
 ---
 
@@ -20,7 +25,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Add QR code generation package.
 - [x] Create the initial project folder structure.
 - [x] Add `.env.example` with Supabase environment variable names.
-- [x] Configure ESLint and formatting. _(oxlint + Prettier; typescript-eslint does not support TS 7 — see DECISIONS.md #2)_
+- [x] Configure ESLint and formatting. _(oxlint + Prettier, because typescript-eslint doesn't support TypeScript 7; see DECISIONS.md #17)_
 - [x] Create a basic home page.
 - [x] Verify the project builds successfully.
 
@@ -28,7 +33,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 
 # Phase 2 — Supabase Project and Database
 
-- [x] Create a Supabase project. _(project exists; migrations not yet applied)_
+- [x] Create a Supabase project. _(migrations applied; confirmed without logging in)_
 - [x] Create the `surveys` table. _(in migrations; local)_
 - [x] Create the `questions` table. _(in migrations; local)_
 - [x] Create the `choices` table. _(in migrations; local)_
@@ -168,12 +173,12 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 # Phase 11 — CSV Export
 
 - [x] Add Export CSV button.
-- [ ] Export survey metadata. _(not done: survey title/date only in the filename)_
+- [x] Export survey metadata. _(`survey_title`, `survey_created_at` columns; local)_
 - [x] Export one row per response.
 - [x] Include submission timestamp.
 - [x] Include each question and answer.
 - [x] Create safe CSV escaping.
-- [ ] Test export with spreadsheet applications. _(file format tested; not opened in Excel/Sheets)_
+- [ ] Test export with spreadsheet applications. _(file format tested; not yet opened in Excel or Google Sheets)_
 
 ---
 
@@ -197,7 +202,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Add error messages.
 - [x] Add confirmation dialogs for destructive actions.
 - [x] Improve QR-code presentation for classroom projection.
-- [x] Test accessibility and keyboard navigation. _(axe scan on 6 pages + keyboard-only submission)_
+- [x] Test accessibility and keyboard navigation. _(axe scan on 6 pages, plus submitting with the keyboard only)_
 - [x] Improve color contrast.
 
 ---
@@ -209,7 +214,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Test survey editing. _(local)_
 - [x] Test activation. _(local)_
 - [x] Test closing surveys. _(local)_
-- [x] Test QR-code links. _(decoded programmatically; not yet scanned with a phone)_
+- [x] Test QR-code links. _(QR read by software; not yet scanned with a phone)_
 - [x] Test student submissions. _(local)_
 - [x] Test duplicate-submission prevention. _(local)_
 - [x] Test results calculations. _(local)_
@@ -223,13 +228,13 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 
 # Phase 15 — Deployment
 
-- [ ] Push the project to GitHub. _(no git repository yet)_
-- [ ] Create the Cloudflare Pages site.
-- [ ] Connect Cloudflare Pages to the GitHub repository.
-- [ ] Configure production environment variables.
-- [ ] Deploy the application.
-- [x] Configure SPA routing. _(`public/_redirects` added; verify after deploy)_
-- [ ] Verify production login.
+- [x] Push the project to GitHub. _(https://github.com/pr1yanshii/classroom-survey, public)_
+- [x] Create the Cloudflare Pages site. _(https://classroom-survey-63r.pages.dev)_
+- [x] Connect Cloudflare Pages to the GitHub repository. _(GitHub shows a passing "Cloudflare Pages" check on `main`)_
+- [x] Configure production environment variables. _(the deployed site uses the project URL and public key; no secret key)_
+- [x] Deploy the application.
+- [x] Configure SPA routing. _(the direct link `/s/zzzzzz` loads and shows "Survey not found.")_
+- [ ] Verify production login. _(wrong password is rejected and protected pages redirect to login; a real instructor login is not checked yet)_
 - [ ] Verify QR codes point to the production URL.
 - [ ] Test student submissions in production.
 - [ ] Test instructor results in production.

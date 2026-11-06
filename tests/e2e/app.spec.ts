@@ -353,12 +353,15 @@ test('CSV export contains one row per response with escaped values', async () =>
   expect(text.charCodeAt(0)).toBe(0xfeff) // BOM for Excel
   const lines = text.slice(1).split('\r\n')
   expect(lines[0]).toBe(
-    'response_id,submitted_at,What is required for recursion?,Every recursive function needs a stopping condition.',
+    'response_id,submitted_at,What is required for recursion?,Every recursive function needs a stopping condition.,survey_title,survey_created_at',
   )
   expect(lines).toHaveLength(4)
-  const answers = lines.slice(1).map((l) => l.split(',').slice(2).join(','))
+  const answers = lines.slice(1).map((l) => l.split(',').slice(2, 4).join(','))
   expect(answers.sort()).toEqual(['A base case,False', 'A base case,True', 'A pointer,True'])
-  for (const l of lines.slice(1)) expect(l).toMatch(/^[0-9a-f-]{36},\d{4}-\d{2}-\d{2}T/)
+  for (const l of lines.slice(1))
+    expect(l).toMatch(
+      /^[0-9a-f-]{36},\d{4}-\d{2}-\d{2}T[^,]+,[^,]+,[^,]+,Recursion Concept Check,\d{4}-\d{2}-\d{2}T[^,]+$/,
+    )
 })
 
 test('refresh picks up new responses', async ({ browser }) => {

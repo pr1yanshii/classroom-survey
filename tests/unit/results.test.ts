@@ -8,7 +8,7 @@ const survey: SurveyWithQuestions = {
   description: null,
   status: 'closed',
   public_slug: 'abc234',
-  created_at: '',
+  created_at: '2026-11-01T09:00:00Z',
   updated_at: '',
   questions: [
     {
@@ -65,7 +65,7 @@ describe('buildResults', () => {
 })
 
 describe('buildCsvRows', () => {
-  it('produces header of question text and one row per response', () => {
+  it('produces header of question text, one row per response, and survey metadata', () => {
     const rows = buildCsvRows(survey, {
       responses: [
         { id: 'r1', submitted_at: '2026-11-05T10:00:00Z' },
@@ -83,9 +83,11 @@ describe('buildCsvRows', () => {
         'submitted_at',
         'What is required for recursion?',
         'Needs a stopping condition',
+        'survey_title',
+        'survey_created_at',
       ],
-      ['r1', '2026-11-05T10:00:00Z', 'A base case', 'True'],
-      ['r2', '2026-11-05T10:01:00Z', '', ''],
+      ['r1', '2026-11-05T10:00:00Z', 'A base case', 'True', 'Recursion', '2026-11-01T09:00:00Z'],
+      ['r2', '2026-11-05T10:01:00Z', '', '', 'Recursion', '2026-11-01T09:00:00Z'],
     ])
   })
 })

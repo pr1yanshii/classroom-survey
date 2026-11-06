@@ -43,7 +43,10 @@ export function buildResults(
   })
 }
 
-/** One row per response: response_id, submitted_at, then one column per question (API.md §12). */
+/**
+ * One row per response: response_id, submitted_at, one column per question (API.md §12),
+ * then survey metadata (title, creation date) so every row identifies its survey.
+ */
 export function buildCsvRows(survey: SurveyWithQuestions, data: ExportData): string[][] {
   const questionIds = survey.questions.map((q) => q.id)
   const choiceText = new Map(
@@ -57,11 +60,19 @@ export function buildCsvRows(survey: SurveyWithQuestions, data: ExportData): str
       .set(a.question_id, a.choice_id ? (choiceText.get(a.choice_id) ?? '') : '')
   }
   return [
-    ['response_id', 'submitted_at', ...survey.questions.map((q) => q.question_text)],
+    [
+      'response_id',
+      'submitted_at',
+      ...survey.questions.map((q) => q.question_text),
+      'survey_title',
+      'survey_created_at',
+    ],
     ...data.responses.map((r) => [
       r.id,
       r.submitted_at,
       ...questionIds.map((qid) => byResponse.get(r.id)?.get(qid) ?? ''),
+      survey.title,
+      survey.created_at,
     ]),
   ]
 }

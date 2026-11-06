@@ -1,6 +1,7 @@
 # Specification Index
 
-The original specification files are kept unchanged and are the source of truth:
+These are the professor's original specification files. They are the source of truth and are kept
+unchanged, except that the TODO.md checkboxes and short status notes were updated to show progress.
 
 - [Classroom_Survey_Web_App_Specification.md](Classroom_Survey_Web_App_Specification.md) — overview, requirements, stack, MVP
 - [DATABASE.md](DATABASE.md) — schema, indexes, RLS, RPCs
