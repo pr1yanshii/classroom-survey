@@ -38,6 +38,7 @@ Node 24.22. Every result below comes from an actual run.
 | Browser tests, Firefox (Playwright build 1572) | **25 / 25 passed** |
 | Live Supabase tests (`npm run test:live`) | **Not run: 10 skipped.** `LIVE_EMAIL` and `LIVE_PASSWORD` were not available locally |
 | Production workflow (`npm run test:prod`) | **Not run: 1 skipped.** No `.env.test.local` (`PROD_URL`, `LIVE_EMAIL`, `LIVE_PASSWORD`) was available locally |
+| Manual test of the full workflow on the live site (by me) | Pass. See "Manual test on the live site" below |
 | Production build | Pass. The student page loads 141.7 kB of JavaScript (gzipped). The Recharts chunk (95.5 kB gzipped) loads only on the results page |
 
 ### Production checks that did run (anonymous, no credentials)
@@ -59,17 +60,32 @@ The results were the same both times, except for the rows marked below.
 | Chrome, `/dashboard` while signed out | Redirects to `/login` |
 | Chrome, wrong login details | Shows "Invalid email or password.", which came from real Supabase Auth |
 | Supabase Auth settings (`/auth/v1/settings`) | First run: `disable_signup: false` (public sign-up was on). **Second run: `disable_signup: true`**, so public sign-up is now off |
-| CSV change on the live site (second run) | The live site serves the same files as the local build of `3af973b` (`index-BCtea890.js`, `Results-Ck41Q37i.js`). The live results code contains `survey_title` and `survey_created_at`. An actual CSV download on the live site has not been tested |
+| CSV change on the live site (second run) | The live site serves the same files as the local build of `3af973b` (`index-BCtea890.js`, `Results-Ck41Q37i.js`). The live results code contains `survey_title` and `survey_created_at`. I then downloaded a real CSV from the live site and opened it in Excel (see below) |
 | All 5 tables and 7 functions exist on live Supabase (third run, after my own check in the dashboard) | Each was called anonymously in a way that can't change data. `surveys`, `questions` and `choices` return `200`; `responses` and `answers` return `permission denied`, which shows they exist (a missing table returns "not found"). `activate_survey`, `close_survey`, `save_survey`, `duplicate_survey` and `survey_choice_counts` return `permission denied for function` to anonymous users, as intended. `get_survey_status` returns `200 null` for an unknown code. `submit_survey_response` rejects a made-up survey with `SURVEY_NOT_ACTIVE` and saves nothing |
 
-**Not yet checked on the live site:**
-- instructor login;
-- creating and activating a survey;
-- the QR code on the live domain;
-- student submission and duplicate blocking;
-- results, CSV and closing.
+### Manual test on the live site (by me)
 
-These need the instructor login (`npm run test:prod`) or the manual checklist in README §6.
+On November 5, 2026, I went through the full workflow by hand on
+<https://classroom-survey-63r.pages.dev> in desktop Chrome, using the demo instructor account. The
+screenshots are in [docs/EVIDENCE.md](docs/EVIDENCE.md).
+
+| Step | Result | Screenshot |
+|------|--------|------------|
+| Log in as the instructor | Worked; the dashboard loaded | 02, 03 |
+| Create a survey with a Multiple Choice and a True/False question, then activate it | Worked | 04, 06, 07 |
+| Present page | Showed the QR code and the `classroom-survey-63r.pages.dev/s/2yvvy3` address | 06 |
+| Open the student link and submit | "Thank you! Your response has been recorded." | 07, 08 |
+| Open the link again in the same browser | "You have already submitted a response to this survey." | 09 |
+| Results page | 1 response, with correct counts, percentages and bar chart | 11 |
+| Export the CSV and open it in Excel (web) | Opened correctly, with the question columns plus `survey_title` and `survey_created_at` | 12 |
+| Close the survey | Confirmation dialog, then the dashboard shows Closed | 19, 20 |
+| Open the student link after closing | "This survey is no longer accepting responses." | 10 |
+| Data in Supabase | The response and its answers are in the `responses` and `answers` tables | 13 |
+
+**Not covered by the manual test:**
+- The student screenshots (07–09) were taken in a desktop browser. I also scanned the QR code with my
+  iPhone, and it opened the live survey. I didn't submit a response from the phone.
+- The automated live tests (`npm run test:live`, `npm run test:prod`) have still not been run.
 
 ### Which tests cover each requirement
 
@@ -131,21 +147,21 @@ These need the instructor login (`npm run test:prod`) or the manual checklist in
 
 ## Limitations (not verified)
 
-- **Logged-in features not tested on the live project.** The migrations are applied (see the checks
-  above). But `npm run test:live` and `npm run test:prod` have not run, because the instructor login
-  was not available locally. The local stand-in only copies the Supabase calls this app makes.
+- **Automated live tests not run.** I tested the live site by hand (see above), but
+  `npm run test:live` and `npm run test:prod` have not run, because the instructor login was not
+  available to Claude Code locally.
 - **Safari and iOS not tested.** Playwright's WebKit build for macOS 14 fails to start with this
   Playwright version (`Unknown setting: PushAPIEnabled`). Phone layouts were tested with Chrome's device
   emulation. Firefox ignores `isMobile`, so in Firefox only the screen size was tested.
 - **No load test.** The 200-students-at-once requirement has not been measured. PGlite runs one
   connection, so many activations or submissions happening at the same moment were not tested.
-- **QR code read by software, not a phone camera.** Readability on a real projector has not been
-  checked.
-- **CSV not opened in Excel or Google Sheets.** Only the file format was checked.
+- **QR code checked on one phone only.** I scanned it with my iPhone and it opened the live survey, but
+  I didn't submit from the phone. Submitting from a phone, other phones (such as Android) and
+  readability on a real projector haven't been checked.
 - **Duplicate protection works per browser.** A private window or cleared storage gets a new token.
   This is an accepted limit of anonymous surveys.
 - **The present page only refreshes the response count.** If the survey is closed from another tab,
   the present page keeps showing the QR code until it is reloaded.
 - **Public sign-up must stay off.** Any signed-in user has full instructor access (one-instructor
-  design, DECISIONS.md #4). Sign-up was on at the first check and off at the second. If it is turned
+  design, docs/DECISIONS.md #4). Sign-up was on at the first check and off at the second. If it is turned
   back on, anyone who signs up and confirms their email could read or delete data.

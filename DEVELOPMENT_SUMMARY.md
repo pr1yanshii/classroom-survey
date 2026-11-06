@@ -32,7 +32,7 @@ Claude Code wrote the code, database migrations, tests and most of the documenta
 
 The six stages were setup, building the app, testing, a UI review against `UI.md`, deployment, and
 these submission documents. My exact prompts are in
-[AI_DEVELOPMENT_HISTORY.md](AI_DEVELOPMENT_HISTORY.md).
+[AI_DEVELOPMENT_HISTORY.md](docs/AI_DEVELOPMENT_HISTORY.md).
 
 ## How the app is built
 
@@ -51,7 +51,7 @@ these submission documents. My exact prompts are in
 
 - **ESLint would not install.** The Vite template uses TypeScript 7, which the ESLint TypeScript plugin
   does not support yet. Claude Code used oxlint and Prettier instead and recorded why in
-  [DECISIONS.md](DECISIONS.md).
+  [DECISIONS.md](docs/DECISIONS.md).
 - **Editing could have deleted answers.** Deleting a survey's questions and adding them back on save
   would also delete answers students had already given. The save function updates questions in place
   instead.
@@ -75,15 +75,15 @@ these submission documents. My exact prompts are in
 - **What the browser tests use and check:** they run against a local stand-in for Supabase. They check
   login, the survey lifecycle, the QR code, phone-sized answering, duplicate blocking, results, CSV and
   accessibility.
-- **Not done yet:** the live Supabase and production tests (`npm run test:live`, `npm run test:prod`)
-  need my instructor login, so they have not been run. Safari and iPhone could not be tested
-  automatically, and there was no load test for 200 students.
+- **Not done yet:** the automated live tests (`npm run test:live`, `npm run test:prod`) have not been
+  run. Safari and iPhone could not be tested automatically, and there was no load test for 200
+  students.
 
 The code is public on GitHub, and Cloudflare Pages deploys it automatically.
 
-- **Checked on the live site:** direct links work, the site uses the right Supabase project with only
-  the public key, signed-out visitors are sent to login, and a wrong password is rejected.
-- **Not yet checked on the live site:** creating a survey, scanning, submitting, results and CSV.
+- **Checked on the live site:** I tested the full workflow there myself: logging in, creating and
+  presenting a survey, submitting, duplicate blocking, results, closing, and opening the CSV in Excel.
+  I also scanned the QR code with my iPhone and it opened the survey, but I didn't submit from it.
 - **Sign-up:** public sign-up was on at first, which matters because anyone who signs in gets
   instructor access. I turned it off, and a later check confirmed it.
 

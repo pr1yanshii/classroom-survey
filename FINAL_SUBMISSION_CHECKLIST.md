@@ -8,7 +8,7 @@ checklist uses:
 - the main specification: goals (§2), users (§3), features (§4), performance and security (§5),
   database (§6), technology (§7), folder structure (§8) and MVP (§9);
 - DATABASE.md, API.md and UI.md;
-- the requirements in my prompts (see [AI_DEVELOPMENT_HISTORY.md](AI_DEVELOPMENT_HISTORY.md)).
+- the requirements in my prompts (see [AI_DEVELOPMENT_HISTORY.md](docs/AI_DEVELOPMENT_HISTORY.md)).
 
 If the course has a separate rubric, it should be checked against this list as well.
 
@@ -17,7 +17,7 @@ If the course has a separate rubric, it should be checked against this list as w
 | Status | Meaning |
 |--------|---------|
 | **Done (local)** | Built and passing automated tests on my local test setup (real migrations on PGlite and the local Supabase stand-in). Not yet checked on the live site |
-| **Done (prod)** | Also checked on the live site, <https://classroom-survey-63r.pages.dev> |
+| **Done (prod)** | Also checked on the live site, <https://classroom-survey-63r.pages.dev>, either by my manual test or by Claude Code's checks that don't need a login |
 | **Unverified (prod)** | Built, but not yet checked on the live site |
 | **Partial** | Only partly met. The note explains what is missing |
 | **Not done** | Not built or not tested |
@@ -27,16 +27,16 @@ If the course has a separate rubric, it should be checked against this list as w
 
 | Requirement | Status | Evidence / notes |
 |-------------|--------|------------------|
-| Instructor authentication | Done (local), Partial (prod) | Supabase email and password login, and protected pages. On the live site, the login redirect and wrong-password rejection were checked, but a real instructor login was not. Public sign-up is turned off (`disable_signup: true` on the second check) |
-| Survey creation and editing | Done (local), Unverified (prod) | `src/pages/SurveyEditor.tsx` and the `save_survey` function. Covered by browser and database tests |
-| Multiple-choice questions | Done (local), Unverified (prod) | The browser tests create and answer them |
-| True/False questions | Done (local), Unverified (prod) | Fixed True/False choices; browser tests |
-| QR code generation | Done (local), Unverified (prod) | The browser tests read the QR code and compare it with the URL on screen. It has not yet been checked showing the `pages.dev` address, or scanned with a phone |
-| Student submission page | Done (local), Partial (prod) | `/s/:slug`. On the live site, the direct link and the "Survey not found." message were checked, but no real submission has been made |
-| PostgreSQL storage | Done (local), Partial (prod) | The migrations have been run on the live project (checked without logging in). Data surviving a reload was tested locally |
-| Results dashboard | Done (local), Unverified (prod) | Counts, percentages, bar charts and Refresh. The example numbers from UI.md are unit-tested |
-| Historical browsing | Done (local), Unverified (prod) | Dashboard search plus status and date filters. Closed and archived surveys keep their results |
-| CSV export | Done (local), Unverified (prod) | One row per response with a question-text header, plus `survey_title` and `survey_created_at`. These two columns are in the live build of commit `3af973b`, but a CSV download on the live site has not been tested |
+| Instructor authentication | Done (local), Done (prod) | Supabase email and password login, and protected pages. On the live site I logged in as the instructor, the login redirect and wrong-password rejection were checked, and public sign-up is off (`disable_signup: true`) |
+| Survey creation and editing | Done (local), Done (prod) | `src/pages/SurveyEditor.tsx` and the `save_survey` function. Covered by browser and database tests. I created a survey on the live site |
+| Multiple-choice questions | Done (local), Done (prod) | The browser tests create and answer them. Used in my live test |
+| True/False questions | Done (local), Done (prod) | Fixed True/False choices; browser tests. Used in my live test |
+| QR code generation | Done (local), Done (prod) | The browser tests read the QR code and compare it with the URL on screen. On the live site the present page shows the `pages.dev` address, and I scanned the QR code with my iPhone, which opened the survey |
+| Student submission page | Done (local), Done (prod) | `/s/:slug`. On the live site I submitted a response, and opening the link again showed the duplicate message (desktop browser, not a phone) |
+| PostgreSQL storage | Done (local), Done (prod) | The migrations are applied on the live project, and my live test response is saved in the `responses` and `answers` tables (screenshot 13) |
+| Results dashboard | Done (local), Done (prod) | Counts, percentages, bar charts and Refresh. The example numbers from UI.md are unit-tested. Checked on the live site with 1 response |
+| Historical browsing | Done (local), Done (prod) | Dashboard search plus status and date filters. Closed and archived surveys keep their results. On the live site the dashboard showed the survey after closing it |
+| CSV export | Done (local), Done (prod) | One row per response with a question-text header, plus `survey_title` and `survey_created_at`. I exported it from the live site and opened it in Excel (web) |
 
 ## 2. Users (specification §3)
 
@@ -47,7 +47,7 @@ If the course has a separate rubric, it should be checked against this list as w
 | Instructor can display QR codes | Done (local) | Present page with a large QR code, a readable URL and a Full Screen button |
 | Instructor can view live and past responses | Done (local) | The present page updates the response count every 3 seconds. The results page has a Refresh button. The charts do not update live, but that is listed as a future feature (§10) |
 | Instructor can export results | Done (local) | Export CSV button |
-| Student can scan, complete and submit | Done (local), Manual | Tested with a QR decoder and a phone-sized browser. **Not yet scanned with a real phone** |
+| Student can scan, complete and submit | Done (local), Done (prod) | Tested with a QR decoder and a phone-sized browser. On the live site I scanned the QR code with my iPhone, and it opened the survey. Submitting was tested in a desktop browser, not from the phone |
 | Student gets a confirmation | Done (local) | "Thank you!" screen |
 | No student account needed | Done (local) | Only a random anonymous token is stored in the browser |
 
@@ -67,7 +67,7 @@ If the course has a separate rubric, it should be checked against this list as w
 
 | Requirement | Status | Evidence / notes |
 |-------------|--------|------------------|
-| Mobile-friendly layout | Done (local), Manual | Tested at 375 px wide: no sideways scrolling, touch targets at least 44 px, accessibility scan passed. Not checked on real devices |
+| Mobile-friendly layout | Done (local), Manual | Tested at 375 px wide: no sideways scrolling, touch targets at least 44 px, accessibility scan passed. On a real device, the live survey opened on my iPhone from the QR code. Other devices not checked |
 | At least 200 students at once | **Not done** | No load test. The design should handle it (static hosting, one database call per submission, a unique index for duplicates), but it has **not been measured** |
 | Average page load under 2 seconds | Partial | The student page's JavaScript is 141.7 kB gzipped, and the chart library only loads on the results page. On the live site, one cold load of `/s/zzzzzz` took about 1.6 s in Chrome on one network. This was not measured systematically |
 | Secure instructor login | Done | Supabase login, Row Level Security on every table, explicit permissions and no sign-up page. Public sign-up was on at the first check and is now off (`disable_signup: true`). It must stay off, because any signed-in user has full access |
@@ -95,38 +95,39 @@ If the course has a separate rubric, it should be checked against this list as w
 | Cloudflare Pages | Done | GitHub shows a passing "Cloudflare Pages" check on `main` |
 | GitHub | Done | <https://github.com/pr1yanshii/classroom-survey> (public) |
 | `src/components`, `src/pages`, `src/lib`, `supabase/`, `public/`, `README.md`, `SPEC.md`, `TODO.md` | Done | `SPEC.md` links to the original specification files |
-| ESLint (TODO.md Phase 1) | Partial (on purpose) | oxlint and Prettier are used instead, because `typescript-eslint` doesn't support TypeScript 7 yet (DECISIONS.md #17) |
+| ESLint (TODO.md Phase 1) | Partial (on purpose) | oxlint and Prettier are used instead, because `typescript-eslint` doesn't support TypeScript 7 yet (docs/DECISIONS.md #17) |
 
 ## 7. Submission items
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Source code on GitHub | Done | Final changes pushed to `main` (commit `3af973b`, plus a later commit that only updates these status notes) |
+| Source code on GitHub | Done | Pushed to `main` up to `5e9f67d`. The latest cleanup (link fixes, screenshot names and these updates) still needs to be committed and pushed |
 | The five original specification files | Done | API.md, DATABASE.md, UI.md and the main specification are unchanged. Their file dates are 18:56, before work started, and git shows no changes. In TODO.md only the checkboxes and status notes changed |
-| Updated TODO.md | Done | Phases 11 and 15 were updated in the final stage |
+| Updated TODO.md | Done | Phases 11 and 15 updated, including my manual live test and the Excel check |
 | Database migrations | Done | `supabase/migrations/` |
 | README with setup, environment variables, testing and deployment | Done | Includes the live URL and the deployment status |
-| DECISIONS.md and TESTING.md | Done | 18 decisions; test results come from real runs |
+| docs/DECISIONS.md and TESTING.md | Done | 18 decisions; test results come from real runs |
 | No exposed secrets; `.env` files ignored | Done | Every tracked file was checked. Only `.env.example`, which has placeholders, is tracked. The deployed code contains only the public key |
 | Public live URL | Done | <https://classroom-survey-63r.pages.dev>. Cloudflare's check passed for `3af973b`, and the live site serves that build |
-| Full workflow checked on the live site | **Not done** | Only the checks that don't need a login have been run. `npm run test:prod` needs my login details |
+| Full workflow checked on the live site | Done (by hand) | I tested it in desktop Chrome (see TESTING.md). The automated `npm run test:prod` has not been run |
 | DEVELOPMENT_SUMMARY.md | Done | |
-| AI_DEVELOPMENT_HISTORY.md | Done | My exact prompts, plus clearly marked summaries |
-| Screenshots | **Not done (Manual)** | 18 are listed in [EVIDENCE.md](EVIDENCE.md). None have been taken yet |
+| docs/AI_DEVELOPMENT_HISTORY.md | Done | My exact prompts, plus clearly marked summaries |
+| Screenshots | Done | 17 of 18 taken, plus 2 extras ([EVIDENCE.md](docs/EVIDENCE.md)). Only the optional #5 wasn't taken. #7 was taken on desktop, not a phone |
 
 ## 8. What I still need to do (most important first)
 
 1. ~~Turn off public sign-up.~~ Done: the second check showed `disable_signup: true`.
 2. ~~Commit and push the final changes.~~ Done: commit `3af973b`, deployed by Cloudflare.
-3. **Check the logged-in workflow on the live site.** I can create `.env.test.local` with `PROD_URL`,
-   `LIVE_EMAIL` and `LIVE_PASSWORD`, then run `npm run test:live` and `npm run test:prod`. Or I can go
-   through the manual checklist in README §6. After that, tick the last three Phase 15 items in TODO.md.
-4. **Take the screenshots** listed in [EVIDENCE.md](EVIDENCE.md).
-5. **Test on real devices.** Scan the QR code with an iPhone (Safari) and an Android phone, and check
-   the present page on the classroom projector.
-6. **Open an exported CSV** in Excel or Google Sheets. Then tick "Test export with spreadsheet
-   applications" in TODO.md Phase 11.
-7. *(Optional)* **Run a load test** for the 200-student requirement, or leave it listed as a known
+3. ~~Check the logged-in workflow on the live site.~~ Done by hand (see TESTING.md).
+4. ~~Open an exported CSV in a spreadsheet.~~ Done in Excel (web).
+5. ~~Finish the screenshots.~~ I'm submitting them as they are (see [EVIDENCE.md](docs/EVIDENCE.md)).
+6. ~~Commit and push the cleanup.~~ Done, together with the screenshots.
+7. *(Optional)* **More device checks.** ~~Scan the QR code with a phone~~ (done with my iPhone; the
+   survey opened). Not done: submitting from a phone, trying an Android phone, and checking the present
+   page on the classroom projector.
+8. *(Optional)* **Run the automated live tests** (`npm run test:live`, `npm run test:prod`) with
+   `.env.test.local`.
+9. *(Optional)* **Run a load test** for the 200-student requirement, or leave it listed as a known
    limitation.
 
 ## 9. Known limitations (accepted and documented)

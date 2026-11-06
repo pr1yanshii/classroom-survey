@@ -9,4 +9,4 @@ unchanged, except that the TODO.md checkboxes and short status notes were update
 - [UI.md](UI.md) — routes, wireframes, accessibility
 - [TODO.md](TODO.md) — phased implementation roadmap
 
-Implementation decisions: [DECISIONS.md](DECISIONS.md)
+Implementation decisions: [DECISIONS.md](docs/DECISIONS.md)

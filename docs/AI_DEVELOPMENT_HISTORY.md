@@ -430,7 +430,7 @@ after "rem".
   second commit.
 - **Still not tested:** the logged-in workflow on the live site has not been tested.
 
-## Stage 10: Finalizing (from 21:44)
+## Stage 10: Finalizing (21:44–21:56)
 
 > I have confirmed that public sign-up is disabled in Supabase. I also verified that all 5 database tables and all 7 required functions exist.
 >
@@ -468,6 +468,168 @@ after "rem".
 - **Docs:** TESTING.md and FINAL_SUBMISSION_CHECKLIST.md now record the database check. This stage was
   added here, then committed and pushed.
 
+## Stage 11: Test run for the screenshot (21:56–22:04)
+
+> I need to capture Screenshot 18 (18-tests.png) for my CSE 4095 Classroom Survey assignment.
+>
+> Please run the following commands in my existing project:
+>
+> 1. npm run typecheck
+> 2. npm run lint
+> 3. npm test
+> 4. npm run test:e2e
+> 5. npm run build
+>
+> Run them individually and report their actual results.
+>
+> Afterward, give me a clean, readable terminal summary showing which checks passed, how many tests passed, and whether any tests were skipped or failed.
+>
+> Do not invent results or hide failures. Do not modify application code unnecessarily.
+>
+> Tell me exactly which terminal output I should screenshot for my submission.
+
+**Summary of what happened:**
+
+- **Commands run:** Claude Code ran the five commands one at a time. All passed:
+  - typecheck and lint showed no errors;
+  - 52/52 Vitest tests passed;
+  - 50/50 Playwright tests passed;
+  - the build passed.
+- **Screenshot advice:** it suggested one command chain with `--reporter=dot`, so the output fits in a
+  single screenshot.
+- **What I did:** I ran that in my own terminal and took screenshot 18.
+
+## Manual steps I did between Stages 11 and 12
+
+- **Live test:** I tested the full workflow by hand on the live site in desktop Chrome. I logged in,
+  created and activated a survey, submitted a response, saw the duplicate block, checked the results
+  and closed the survey.
+- **CSV:** I opened the exported CSV in Excel (web).
+- **Screenshots:** I took 19 screenshots.
+- **File moves:** I moved them, along with `AI_DEVELOPMENT_HISTORY.md`, `DECISIONS.md` and
+  `EVIDENCE.md`, into a new `docs/` folder.
+
+## Stage 12: Final audit (22:04–22:07)
+
+> Perform a quick, token-efficient FINAL SUBMISSION AUDIT of my CSE 4095 Classroom Survey Web App.
+>
+> Everything is already built, tested, deployed, and working. Do NOT rerun tests, builds, lint, typechecking, or deployment.
+>
+> GitHub: https://github.com/pr1yanshii/classroom-survey
+> Live site: https://classroom-survey-63r.pages.dev/
+>
+> Check only the following:
+>
+> 1. **Assignment requirements:** Compare the existing project and FINAL_SUBMISSION_CHECKLIST.md against the professor's five specification files. Identify only missing or incomplete requirements.
+>
+> 2. **Documentation:** Verify README.md, DEVELOPMENT_SUMMARY.md, AI_DEVELOPMENT_HISTORY.md, DECISIONS.md, TESTING.md, TODO.md, and FINAL_SUBMISSION_CHECKLIST.md are complete, consistent, accurate, and written in simple, natural student language.
+>
+> 3. **Report:** Confirm DEVELOPMENT_SUMMARY.md is suitable as a 1–2-page development report. Identify any necessary corrections.
+>
+> 4. **Screenshots:** Check docs/screenshots/ against EVIDENCE.md. List only missing, incorrect, or unreadable screenshots. Do not require optional screenshots unnecessarily.
+>
+> 5. **GitHub:** Check for uncommitted changes and confirm the required files are included in the repository. Do not push anything.
+>
+> 6. **Submission:** Identify the exact files and links I should submit. Clearly distinguish professor-required items from recommended extras. Do not assume a PDF, ZIP, or video is required without evidence.
+>
+> 7. **Final readiness:** Give a short verdict: READY, READY WITH LIMITATIONS, or NOT READY, followed by only the remaining essential actions.
+>
+> IMPORTANT:
+> - Do not run tests, builds, lint, or typechecking.
+> - Do not modify code, documentation, or configuration.
+> - Do not commit or push.
+> - Do not repeat previous test results in detail.
+> - Do not perform unnecessary research.
+> - Do not invent requirements or verification results.
+> - Keep your final response concise, ideally under 400 words.
+>
+> I only want to know whether anything essential is missing before submission.
+
+**Summary of what happened:**
+
+Claude Code checked the repository without running any tests or changing anything. It found:
+- **Broken links:** 11, caused by moving the three files into `docs/`.
+- **Screenshot names:** the screenshots still had macOS default names, and EVIDENCE.md listed every one
+  as "Not taken".
+- **Missing screenshots:** #10 (closed-survey message) and #17 (GitHub page). #7 was taken in a desktop
+  browser rather than on a phone.
+- **Privacy:** two screenshots show personal details.
+- **Out-of-date notes:** several documents still said the live workflow and the Excel check were not
+  done.
+
+Its verdict was "READY WITH LIMITATIONS".
+
+## Stage 13: Cleanup (22:07 onward)
+
+> Please finish the remaining cleanup for my Classroom Survey project based on your audit.
+>
+> Fix the broken links, rename and organize the screenshots, and update EVIDENCE.md to show which screenshots are completed or missing.
+>
+> Also update the documentation to reflect that I have tested the full workflow on the live website and opened the CSV in Excel. Keep the writing simple and natural, and don't change anything unnecessary.
+>
+> Check the screenshots for any personal information and let me know if anything needs to be removed. Keep the missing screenshots and untested features clearly listed.
+>
+> Don't change the application code, run tests, or rebuild anything.
+>
+> Once everything is done, give me a short summary of what you changed and what's still left. Don't commit or push anything yet.
+
+**Summary of what happened:**
+
+- **Links:** all 11 broken links were fixed by pointing them at `docs/`. README's project structure now
+  lists `docs/`.
+- **Screenshots:** each one was renamed to its EVIDENCE.md file name, matched by its timestamp. The
+  close dialog and the closed dashboard were added as extras #19 and #20.
+- **EVIDENCE.md:** rewritten to show which screenshots are done, which are missing, and a privacy
+  check. Personal details were found in three screenshots:
+  - `15a`: my personal email;
+  - `16`: part of my Cloudflare login email;
+  - `12`: my Microsoft profile photo.
+- **Live test recorded:** my manual live test and the Excel check were added to TESTING.md, TODO.md
+  (Phases 11 and 15), FINAL_SUBMISSION_CHECKLIST.md, README.md, DEVELOPMENT_SUMMARY.md and
+  DECISIONS.md (#15).
+- **Untouched:** no application code, configuration or specification text was changed. Nothing was
+  run, and nothing was committed or pushed.
+
+## Stage 14: Phone QR test
+
+**My message (verbatim):**
+
+> ive tested the qr code on phone
+
+**Summary of what happened:**
+
+- **Docs updated:** the phone scan was recorded in TESTING.md, TODO.md, FINAL_SUBMISSION_CHECKLIST.md,
+  README.md, DEVELOPMENT_SUMMARY.md and EVIDENCE.md.
+- **What was recorded:** only that scanning the QR code with my phone opened the survey on the live
+  site. The phone model and browser, and whether I submitted from the phone, weren't stated, so the
+  documents don't claim them.
+
+## Stage 15: iPhone details and final push
+
+**My message (verbatim):**
+
+> The QR code test was done on my iPhone. I scanned the QR code and successfully opened the live survey, but I didn't submit a response from the phone.
+>
+> Please update the documentation to reflect this accurately. Don't claim I tested submission or Safari specifically.
+>
+> I'm fine with the screenshots as they are, so no more screenshot changes are needed.
+>
+> Now do one final quick check, then commit and push all the documentation and screenshots to GitHub. Don't change application code or rerun tests.
+>
+> Confirm the push succeeded and give me a short summary of what I need to submit.
+
+**Summary of what happened:**
+
+- **Phone test:** the documents now say the QR scan was done on my iPhone and opened the live survey,
+  with no submission from the phone. Safari isn't claimed.
+- **Screenshots:** during the final check, Claude Code found that I had added two more screenshots,
+  `10-student-closed.png.png` and `17-github.png`. It checked them and marked #10 and #17 as done, so
+  17 of 18 are now done; only the optional #5 is missing. #10 also showed the closed-survey message
+  working on the live site, so it was added to TESTING.md. The files were left exactly as I named them.
+  The personal details in the other screenshots were kept by my choice.
+- **Pushed:** after a final check, the documentation and screenshots were committed and pushed. No
+  application code was changed and no tests were run.
+
 ## What the AI did and did not do
 
 - **Claude Code** wrote the application code, migrations, tests and most of the documentation. It ran
@@ -475,10 +637,13 @@ after "rem".
 - **I** wrote the prompts, chose to make the repository public and reviewed each stage's report. I also
   did all the account and dashboard work in Supabase and Cloudflare, and provided the course
   specification files.
+- **Done by me on the live site:**
+  - the full signed-in workflow, by hand in desktop Chrome;
+  - opening the CSV in Excel (web);
+  - scanning the QR code with my iPhone, which opened the survey (I didn't submit from the phone).
 - **Not done by anyone yet:**
-  - The signed-in workflow on the live site.
-  - Real phone scans, Safari/iPhone and a projector check.
-  - Opening the CSV in Excel or Google Sheets.
+  - The automated live tests.
+  - Submitting from a phone, an Android phone and a projector check.
   - A 200-student load test.
 
-  These are tracked in [FINAL_SUBMISSION_CHECKLIST.md](FINAL_SUBMISSION_CHECKLIST.md).
+  These are tracked in [FINAL_SUBMISSION_CHECKLIST.md](../FINAL_SUBMISSION_CHECKLIST.md).

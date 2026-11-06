@@ -8,10 +8,10 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 > is unchanged; I only updated the checkboxes and added short notes in parentheses.
 >
 > - `[x]` means the item is built and passed the automated tests described in [TESTING.md](TESTING.md).
-> - "local" means it was tested on my local setup (the real migrations on PGlite, plus a local
->   stand-in for Supabase) but **not yet on the live Supabase project**.
-> - The live project has the migrations applied (checked without logging in). The logged-in instructor
->   features have not been tested there yet.
+> - "local" means it was covered by the automated tests on my local setup (the real migrations on
+>   PGlite, plus a local stand-in for Supabase).
+> - I also tested the full workflow by hand on the live site (see TESTING.md). The automated live
+>   tests have not been run.
 
 ---
 
@@ -25,7 +25,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Add QR code generation package.
 - [x] Create the initial project folder structure.
 - [x] Add `.env.example` with Supabase environment variable names.
-- [x] Configure ESLint and formatting. _(oxlint + Prettier, because typescript-eslint doesn't support TypeScript 7; see DECISIONS.md #17)_
+- [x] Configure ESLint and formatting. _(oxlint + Prettier, because typescript-eslint doesn't support TypeScript 7; see docs/DECISIONS.md #17)_
 - [x] Create a basic home page.
 - [x] Verify the project builds successfully.
 
@@ -178,7 +178,7 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Include submission timestamp.
 - [x] Include each question and answer.
 - [x] Create safe CSV escaping.
-- [ ] Test export with spreadsheet applications. _(file format tested; not yet opened in Excel or Google Sheets)_
+- [x] Test export with spreadsheet applications. _(opened in Excel (web); Google Sheets not tried)_
 
 ---
 
@@ -214,12 +214,12 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Test survey editing. _(local)_
 - [x] Test activation. _(local)_
 - [x] Test closing surveys. _(local)_
-- [x] Test QR-code links. _(QR read by software; not yet scanned with a phone)_
+- [x] Test QR-code links. _(QR read by software, and scanned with my iPhone on the live site)_
 - [x] Test student submissions. _(local)_
 - [x] Test duplicate-submission prevention. _(local)_
 - [x] Test results calculations. _(local)_
 - [x] Test CSV export. _(local)_
-- [x] Test mobile layout. _(Chrome device emulation; no real phone yet)_
+- [x] Test mobile layout. _(Chrome device emulation, plus opening the live survey on my iPhone)_
 - [x] Test with at least two browsers. _(Chrome + Firefox; Safari/iOS not tested)_
 - [x] Test unauthorized access attempts. _(local)_
 - [x] Test database Row Level Security. _(local; live pending)_
@@ -234,10 +234,10 @@ This roadmap breaks the implementation into small, testable phases ordered from 
 - [x] Configure production environment variables. _(the deployed site uses the project URL and public key; no secret key)_
 - [x] Deploy the application.
 - [x] Configure SPA routing. _(the direct link `/s/zzzzzz` loads and shows "Survey not found.")_
-- [ ] Verify production login. _(wrong password is rejected and protected pages redirect to login; a real instructor login is not checked yet)_
-- [ ] Verify QR codes point to the production URL.
-- [ ] Test student submissions in production.
-- [ ] Test instructor results in production.
+- [x] Verify production login. _(tested by hand; a wrong password is also rejected)_
+- [x] Verify QR codes point to the production URL. _(present page shows the `pages.dev` address; scanning it with my iPhone opened the survey)_
+- [x] Test student submissions in production. _(tested by hand in a desktop browser, including duplicate blocking)_
+- [x] Test instructor results in production. _(tested by hand, including CSV export)_
 
 ---
 

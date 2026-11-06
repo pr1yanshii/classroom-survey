@@ -13,18 +13,25 @@ This is my CSE 4095 project.
   [Classroom_Survey_Web_App_Specification.md](Classroom_Survey_Web_App_Specification.md),
   [DATABASE.md](DATABASE.md), [API.md](API.md), [UI.md](UI.md) and [TODO.md](TODO.md). In TODO.md,
   only the progress checkboxes and notes are updated. [SPEC.md](SPEC.md) links to all five.
-- **Design decisions:** [DECISIONS.md](DECISIONS.md)
+- **Design decisions:** [DECISIONS.md](docs/DECISIONS.md)
 - **Test results and known limitations:** [TESTING.md](TESTING.md)
 - **Submission documents:**
   - [DEVELOPMENT_SUMMARY.md](DEVELOPMENT_SUMMARY.md)
-  - [AI_DEVELOPMENT_HISTORY.md](AI_DEVELOPMENT_HISTORY.md)
-  - [EVIDENCE.md](EVIDENCE.md) (screenshots)
+  - [AI_DEVELOPMENT_HISTORY.md](docs/AI_DEVELOPMENT_HISTORY.md)
+  - [EVIDENCE.md](docs/EVIDENCE.md) (screenshots)
   - [FINAL_SUBMISSION_CHECKLIST.md](FINAL_SUBMISSION_CHECKLIST.md)
 
-**Deployment status (November 5, 2026):** the site is live, and the parts that don't need a login
-have been checked: direct links, the Supabase connection, login protection and wrong-password
-rejection. The logged-in instructor workflow has **not** been checked on the live site yet. See
-[TESTING.md](TESTING.md#production-checks-that-did-run-anonymous-no-credentials).
+**Deployment status (November 5, 2026):** the site is live.
+- I tested the full workflow on it by hand in desktop Chrome: login, creating and activating a survey,
+  the QR page, submitting, duplicate blocking, results, CSV export (opened in Excel) and closing.
+- Claude Code also checked the parts that don't need a login.
+- The automated live tests (`npm run test:live`, `npm run test:prod`) have not been run.
+- I also scanned the QR code with my iPhone, and it opened the live survey. I didn't submit from the
+  phone.
+- Still untested: submitting from a phone, other phones, a projector check and a load test.
+
+See [TESTING.md](TESTING.md#production-checks-that-did-run-anonymous-no-credentials) and the
+screenshots in [docs/EVIDENCE.md](docs/EVIDENCE.md).
 
 ## Features
 
@@ -73,6 +80,7 @@ supabase/
 tests/
   unit/  db/  e2e/  live/  prod/   See TESTING.md
 public/         favicon, Cloudflare `_redirects` (SPA routing)
+docs/           DECISIONS, AI development history, EVIDENCE, screenshots/
 ```
 
 | Path | Page | Who can open it |

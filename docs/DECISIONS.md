@@ -186,8 +186,8 @@ We added CSV export so instructors can download the survey responses and open th
   - Cells that start with `=`, `+`, `-` or `@` get a `'` in front, so a spreadsheet won't run them as
     formulas.
 - **Large classes:** data is loaded in pages of 1000 rows, so big classes aren't cut off.
-- **Not yet tested in a spreadsheet:** the file has not been opened in Excel or Google Sheets yet. Only
-  the file format was tested.
+- **Spreadsheet check:** I exported a CSV from the live site and opened it in Excel (web). It hasn't
+  been tried in Google Sheets.
 
 ## 16. Deployment
 
